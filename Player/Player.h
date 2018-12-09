@@ -3,7 +3,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "Card.h"
+#include "../GameEngine/Card.h"
 #include <vector>
 #include <memory>
 

@@ -4,7 +4,7 @@ namespace bj {
 
 	action Human::move()
 	{
-		
+		return HIT;
 	}
 
 }

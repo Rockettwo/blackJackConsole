@@ -7,7 +7,7 @@
 #include <time.h>
 
 #include "Player.h"
-#include "GameOptions.h"
+#include "../GameEngine/GameOptions.h"
 
 namespace bj {
 	class RandomPlayer : public Player

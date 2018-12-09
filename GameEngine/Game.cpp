@@ -6,8 +6,8 @@
 
 #include "Game.h"
 
-#include "RandomPlayer.h"
-#include "Human.h"
+#include "../Player/RandomPlayer.h"
+#include "../Player/Human.h"
 
 namespace bj {
 

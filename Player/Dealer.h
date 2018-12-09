@@ -4,7 +4,7 @@
 #define DEALER_H
 
 #include "Player.h"
-#include "GameOptions.h"
+#include "../GameEngine/GameOptions.h"
 
 namespace bj {
 

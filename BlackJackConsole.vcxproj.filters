@@ -24,42 +24,42 @@
     <ClCompile Include="bjcon.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Game.cpp">
+    <ClCompile Include="GameEngine\Game.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="GameOptions.cpp">
+    <ClCompile Include="GameEngine\GameOptions.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Dealer.cpp">
+    <ClCompile Include="Player\Dealer.cpp">
       <Filter>Quelldateien\Player</Filter>
     </ClCompile>
-    <ClCompile Include="Player.cpp">
+    <ClCompile Include="Player\Player.cpp">
       <Filter>Quelldateien\Player</Filter>
     </ClCompile>
-    <ClCompile Include="Human.cpp">
+    <ClCompile Include="Player\Human.cpp">
       <Filter>Quelldateien\Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Game.h">
+    <ClInclude Include="GameEngine\Game.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="GameOptions.h">
+    <ClInclude Include="GameEngine\GameOptions.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Card.h">
+    <ClInclude Include="GameEngine\Card.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Player.h">
+    <ClInclude Include="Player\Player.h">
       <Filter>Headerdateien\Player</Filter>
     </ClInclude>
-    <ClInclude Include="Dealer.h">
+    <ClInclude Include="Player\Dealer.h">
       <Filter>Headerdateien\Player</Filter>
     </ClInclude>
-    <ClInclude Include="RandomPlayer.h">
+    <ClInclude Include="Player\RandomPlayer.h">
       <Filter>Headerdateien\Player</Filter>
     </ClInclude>
-    <ClInclude Include="Human.h">
+    <ClInclude Include="Player\Human.h">
       <Filter>Headerdateien\Player</Filter>
     </ClInclude>
   </ItemGroup>
