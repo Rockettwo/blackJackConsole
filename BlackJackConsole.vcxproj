@@ -153,21 +153,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Card.h" />
-    <ClInclude Include="Dealer.h" />
-    <ClInclude Include="Game.h" />
-    <ClInclude Include="GameOptions.h" />
-    <ClInclude Include="Human.h" />
-    <ClInclude Include="Player.h" />
-    <ClInclude Include="RandomPlayer.h" />
+    <ClInclude Include="GameEngine\Card.h" />
+    <ClInclude Include="Player\Dealer.h" />
+    <ClInclude Include="GameEngine\Game.h" />
+    <ClInclude Include="GameEngine\GameOptions.h" />
+    <ClInclude Include="Player\Human.h" />
+    <ClInclude Include="Player\Player.h" />
+    <ClInclude Include="Player\RandomPlayer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="bjcon.cpp" />
-    <ClCompile Include="Dealer.cpp" />
-    <ClCompile Include="Game.cpp" />
-    <ClCompile Include="GameOptions.cpp" />
-    <ClCompile Include="Human.cpp" />
-    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Player\Dealer.cpp" />
+    <ClCompile Include="GameEngine\Game.cpp" />
+    <ClCompile Include="GameEngine\GameOptions.cpp" />
+    <ClCompile Include="Player\Human.cpp" />
+    <ClCompile Include="Player\Player.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
