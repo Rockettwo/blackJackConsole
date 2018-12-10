@@ -15,6 +15,8 @@ namespace bj {
 
 		action move(int stack) override;
 
+		int exchangeMoney(double ratio) override;
+
 	private:
 
 	};

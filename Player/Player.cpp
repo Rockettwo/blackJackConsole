@@ -6,10 +6,21 @@ namespace bj {
 	bool Player::addCard(std::shared_ptr<Card> c, int stack)
 	{
 		_cards[stack].push_back(c);
-		if (isBusted(stack))
+		if (_cards[stack].size() == 2 && cardSum(stack) == 11 && containsAce(stack))
+			blackJack[stack] = true;
+
+		if (isBusted(stack)) {
+			std::cout << "Busted." << std::endl;
 			return true;
-		else
+		} else {
 			return false;
+		}
+	}
+
+	bool Player::addCard2(std::shared_ptr<Card> c, int stack)
+	{
+		c->printCard(); std::cout << std::endl;
+		return addCard(c, stack);
 	}
 
 	void Player::prepare()
@@ -20,17 +31,21 @@ namespace bj {
 		_split = false;
 		doubled[0] = false; doubled[1] = false;
 		finished[0] = false; finished[1] = true;
+		blackJack[0] = false; blackJack[1] = false;
 	}
 
 	void Player::printCards()
 	{
+		int j = 0;
 		for (auto& cards : _cards) {
 			for (int i = 0; i < cards.size(); ++i) {
 				cards[i]->printCard();
-				std::cout << (i + 1 != cards.size() ? " | " : " \n");
+				std::cout << (i + int(1) != cards.size() ? " | " : "");
+				if (i + int(1) == cards.size())
+					std::cout << " --- card count: " << cardSum(j) << std::endl;
 			}
+			++j;
 		}
-
 	}
 
 	void Player::hit(int stack)
@@ -71,19 +86,34 @@ namespace bj {
 		_money -= _actBet;
 	}
 
+	int Player::exchangeMoney(double ratio)
+	{
+		_money += int(_actBet * ratio);
+		return int(_actBet * ratio);
+	}
+
 	bool Player::isBusted(int stack) {
 		if (cardSum(stack) > 21) {
 			finished[stack] = true;
-			std::cout << "Busted." << std::endl;
 			return true;
-		}
-		else {
+		}else {
 			return false;
 		}
 	}
 
 	bool Player::isFinished() {
 		if (finished[0] && finished[1]) {
+			for (int i = 0; i < 2; ++i) {
+				if (containsAce(i) && cardSum(i) + 10 < 22) {
+					for (auto card : _cards[i]) {
+						if (card->getRank() == ACE) {
+							card->setAceVal11();
+							std::cout << "Set val of ace to 11" << std::endl;
+							break;
+						}
+					}
+				}
+			}
 			finished[0] = false; finished[1] = true;
 			return true;
 		}
@@ -92,23 +122,32 @@ namespace bj {
 		}
 	}
 
+	bool Player::containsAce(int stack) {
+		for (auto card : _cards[stack]) {
+			if (card->getRank() == ACE) 
+				return true;
+		}
+		return false;
+	}
+
 	bool Player::splitAllowed(int stack) {
 		if (!_split && _cards[stack].size() == 2
-			&& _cards[stack][0]->getRank() == _cards[stack][1]->getRank()) {
+			&& _cards[stack][0]->getRank() == _cards[stack][1]->getRank()
+			&& _money > int(_actBet)) {
 			return true;
 		}
 		return false;
 	}
 
 	bool Player::doubleAllowed(int stack) {
-		if (_cards[stack].size() == 2) {
+		if (_cards[stack].size() == 2 && _money > int(_actBet)) {
 			return true;
 		}
 		return false;
 	}
 
 	void Player::printActions(int stack) {
-		std::cout << "(H)IT | (S)TAND" << (doubleAllowed(stack) ? " | (D)OUBLE" : "") << (splitAllowed(stack) ? " | S(P)LIT" : "") << std::endl;
+		std::cout << "(H)IT | (S)TAND" << (doubleAllowed(stack) ? " | (D)OUBLE" : "") << (splitAllowed(stack) ? " | S(P)LIT" : "") << "  - stack: " << stack << std::endl;
 	}
 
 	void Player::generateAllowedVec(int stack) {

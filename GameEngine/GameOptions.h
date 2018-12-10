@@ -8,6 +8,7 @@
 namespace bj {
 	constexpr unsigned int numOfColors = 4;
 	constexpr unsigned int numOfRanks = 13;
+	constexpr unsigned int numOfCards = numOfColors * numOfRanks;
 
 	enum cardStack { SHOE, TABLE, PLAYED };
 	static std::string cardStack_s[] = { "SHOE", "TABLE", "PLAYED" };
@@ -32,10 +33,11 @@ namespace bj {
 	public:
 		GameOptions(gameType gt, unsigned int betUnit);
 
-		unsigned int numOfDecks() const { return _numOfDecks; };
-		double bjPayRate() const { return _bjPayRate; };
-		bool insurance() const { return _insurance; };
-		unsigned int betUnit() const { return _betUnit; };
+		unsigned int numOfDecks() const { return _numOfDecks; }
+		double bjPayRate() const { return _bjPayRate; }
+		bool insurance() const { return _insurance; }
+		unsigned int betUnit() const { return _betUnit; }
+		double reshuffleRatio() const { return _reshuffleRatio; }
 
 	private:
 		gameType _gt;
@@ -43,6 +45,8 @@ namespace bj {
 		double _bjPayRate;
 		bool _insurance;
 		unsigned int _betUnit;
+
+		double _reshuffleRatio;
 
 	};
 

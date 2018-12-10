@@ -31,6 +31,7 @@ namespace bj {
 		virtual action move(int stack) = 0;
 
 		bool addCard(std::shared_ptr<Card> c, int stack);
+		bool addCard2(std::shared_ptr<Card> c, int stack);
 		void prepare();
 		void printCards();
 
@@ -39,11 +40,16 @@ namespace bj {
 		void split();
 		void doubleDown(int stack);
 		
-		void getBet(unsigned int minBet);
 		int cardSum(int stack);
 		bool isBusted(int stack);
+		bool isBlackJack(int stack) { return blackJack[stack]; }
+		bool containsAce(int stack);
 		bool isFinished();
+
+		void getBet(unsigned int minBet);
 		int getMoney() { return _money; };
+		// ONLY INT ALLOWED --> ratios are 6/5 or 3/2
+		virtual int exchangeMoney(double ratio);
 
 		bool splitAllowed(int stack);
 		bool doubleAllowed(int stack);
@@ -52,6 +58,7 @@ namespace bj {
 		void generateAllowedVec(int stack);
 
 		bool isSplit() { return _split; }
+		bool isDoubled(int stack) { return doubled[stack]; }
 		std::string name() { return _name; }
 
 	protected:
@@ -66,6 +73,7 @@ namespace bj {
 		bool _split = false;
 		bool doubled[2] = { false, false };
 		bool finished[2] = { false, true };
+		bool blackJack[2] = { false, false };
 		unsigned int _actBet;
 	};
 

@@ -39,6 +39,8 @@ namespace bj {
 
 		void printCard() { std::cout << getColorString() << "-" << getRankString(); }
 
+		void setAceVal11() { _value = _ace ? 11 : _value; }
+
 	private:
 		cardColor _cC;
 		cardRank _cR;

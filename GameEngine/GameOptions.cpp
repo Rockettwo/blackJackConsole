@@ -41,6 +41,7 @@ namespace bj {
 			_bjPayRate = 1.5;
 			_insurance = true;
 		}
+		_reshuffleRatio = 0.75;
 
 	}
 }

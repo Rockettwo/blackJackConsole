@@ -9,6 +9,7 @@
 
 #include "../Player/RandomPlayer.h"
 #include "../Player/Human.h"
+#include "../helperFunctions.h"
 
 namespace bj {
 
@@ -22,7 +23,7 @@ namespace bj {
 			}
 		}
 
-		//playerVec.push_back(std::shared_ptr<Dealer>(new Dealer(std::make_shared<GameOptions>(_go))));
+		playerVec.push_back(std::shared_ptr<Player>(new Dealer(std::make_shared<GameOptions>(_go))));
 	}
 
 	std::shared_ptr<Card> Game::getCardAt(cardStack stack, unsigned int idx) const
@@ -58,10 +59,16 @@ namespace bj {
 		std::cout << "Card Color: " << actCard->getColorString() << " - Rank: " << actCard->getRankString() << std::endl;
 	}
 
+	void Game::shuffleIfNeeded()
+	{
+		if (cardStacks.cardsInShoe.size() < int(_go.reshuffleRatio() * double(numOfCards))
+			|| cardStacks.cardsInShoe.size() < 3 * playerVec.size())
+			shuffle();
+	}
+
 	void Game::shuffle() 
 	{
-		std::shuffle(cardStacks.cardsInShoe.begin(), cardStacks.cardsInShoe.end(), std::default_random_engine(0));
-		std::shuffle(cardStacks.cardsInShoe.begin(), cardStacks.cardsInShoe.end(), std::default_random_engine(time(0)));
+		std::shuffle(cardStacks.cardsInShoe.begin(), cardStacks.cardsInShoe.end(), std::default_random_engine(unsigned int(time(NULL))));
 	}
 
 	void Game::addPlayer(std::string name, int money, strategy st)
@@ -100,11 +107,16 @@ namespace bj {
 	void Game::play()
 	{
 		while (playerVec.size() > 1) {
-			playSingle();
+			shuffleIfNeeded();
+
+			playerVec[0]->prepare();
 			for (int i = 1; i < playerVec.size(); ++i) {
-				//playerVec[i]->prepare();
-				if (playerVec[i]->getMoney() < _go.betUnit()) deletePlayer(i);
+				playerVec[i]->prepare();
+				if (unsigned int(playerVec[i]->getMoney()) < _go.betUnit()) deletePlayer(i);
 			}
+			playSingle();
+			std::system("pause");
+			clrscr();
 		}
 		std::cout << "Error: no player" << std::endl;
 	}
@@ -112,6 +124,7 @@ namespace bj {
 
 	void Game::playSingle()
 	{
+		static std::shared_ptr<Player> dealer = playerVec[0];
 		if (playerVec.size() < 2) { std::cout << "Error: no player" << std::endl; return; }
 		std::shared_ptr<Card> actCard ;
 		
@@ -123,7 +136,7 @@ namespace bj {
 			}
 		}
 		// dealer card
-		playerVec[0]->addCard(popCard(), 0);
+		dealer->addCard(popCard(), 0);
 
 		printGame();
 
@@ -132,58 +145,120 @@ namespace bj {
 			std::shared_ptr<Player> player = playerVec[i];
 			bool split = false;			// Has the player splitted his cards?
 			int stack = 0;				// Which stack are we using now?
-			std::cout << player->name() << " it's your turn. You have " << player->getMoney() << " left." << std::endl;
+			std::cout << player->name() << " it's your turn. You have " << player->getMoney() << " money left." << std::endl;
 			player->getBet(_go.betUnit());			// First get money
 			while (!player->isFinished()) {
+
+				std::cout << std::endl;
+				player->printCards();
+
 				switch (player->move(stack)) {
 				case HIT:
-					std::cout << "HIT" << std::endl ;
+					std::cout << "HIT " ;
 					//player->hit(stack);
-					if (player->addCard(popCard(), stack) && split && stack == 0) {
+					if (player->addCard2(popCard(), stack) && split && stack == 0) {
 						stack = 1;
 					}
 					break;
 				case STAND:
-					std::cout << "STAND" << std::endl;
+					std::cout << "STAND " << std::endl;
 					player->stand(stack);
 					if (split && stack == 0) {
 						stack = 1;
 					}
 					break;
 				case SPLIT:
-					if (split) { std::cout << "STAND - INVALID" << std::endl; break; }
-					std::cout << "SPLIT" << std::endl;
+					std::cout << "SPLIT " << std::endl;
 					player->split();
-					player->addCard(popCard(), 0);
-					player->addCard(popCard(), 1);
+					player->addCard2(popCard(), 0);
+					player->addCard2(popCard(), 1);
 					split = true;
 					break;
 				case DOUBLE:
-					std::cout << "DOUBLEDOWN" << std::endl;
+					std::cout << "DOUBLEDOWN " ;
 					player->doubleDown(stack);
-					if (player->addCard(popCard(), stack) && split && stack == 0) {
+					if (player->addCard2(popCard(), stack) && split && stack == 0) {
 						stack = 1;
 					}
 					break;
 				default:
 					std::cout << "NIX" << std::endl;
 				}
-				player->printCards();
 			}
-			std::cout << "------" << std::endl;
+			std::cout << "------" << std::endl << std::endl;
 		}
-	
+
+		// Now dealer gets cards:
+		std::cout << "Dealer" << std::endl;
+		dealer->addCard(popCard(), 0);
+		while (!dealer->isFinished()) {
+			switch (dealer->move(0)) {
+			case HIT:
+				//player->hit(stack);
+				dealer->addCard(popCard(), 0);
+				break;
+			case STAND:
+				dealer->stand(0);
+				break;
+			default:
+				break;
+			}
+		}
+		std::cout << std::endl; dealer->printCards();
+		std::cout << "------" << std::endl << std::endl;
+
+		evaluate();
+	}
+
+	void Game::evaluate() 
+	{
+		static std::shared_ptr<Player> dealer = playerVec[0];
+
+		for (int i = 1; i < playerVec.size(); ++i) {
+			std::shared_ptr<Player> player = playerVec[i];
+			for (int j = 0; j < (player->isSplit() ? 2 : 1); ++j) {
+				double ratio = 0.0;
+				if (player->isBusted(j)) {
+					std::cout << player->name() << " - stack " << j << " - You got busted." << std::endl;
+					ratio = 0.0;
+				} else if (player->isBlackJack(j) && !dealer->isBlackJack(0)) {
+					std::cout << player->name() << " - stack " << j << " - You have a blackjack." << std::endl;
+					ratio = 1.0 + _go.bjPayRate();
+				} else if (player->isBlackJack(j) && dealer->isBlackJack(0)) {
+					std::cout << player->name() << " - stack " << j << " - Blackjack for both." << std::endl;
+					ratio = 1.0;
+				} else if (dealer->isBlackJack(0)) {
+					std::cout << player->name() << " - stack " << j << " - Blackjack for dealer." << std::endl;
+					ratio = 0.0;
+				} else if (dealer->isBusted(0)) {
+					std::cout << player->name() << " - stack " << j << " - Dealer busted." << std::endl;
+					ratio = 2.0;					
+				} else if (dealer->cardSum(0) > player->cardSum(j)) {
+					std::cout << player->name() << " - stack " << j << " - Dealer has " << dealer->cardSum(j) << " you have " << player->cardSum(j) << "." << std::endl;
+					ratio = 0.0;
+				}else if (dealer->cardSum(0) < player->cardSum(j)) {
+					std::cout << player->name() << " - stack " << j << " - Dealer has " << dealer->cardSum(j) << " you have " << player->cardSum(j) << "." << std::endl;
+					ratio = 2.0;
+				}
+				else {
+					std::cout << player->name() << " - stack " << j << " - Equal split." << std::endl;
+					ratio = 1.0;
+				}
+				dealer->exchangeMoney(player->exchangeMoney(ratio));
+			}
+			std::cout << player->name() << " you have " << player->getMoney() << " money left." << std::endl << std::endl;
+		}
 	}
 
 	void Game::printGame()
 	{
-		std::cout << "--------------- GAME ---------------" << std::endl;
+		std::cout << std::endl << "--------------- GAME ---------------" << std::endl;
 		for (std::shared_ptr<Player> player : playerVec) {
 			std::cout << player->name() << std::endl;
 			player->printCards();
 			std::cout << "---------------------------" << std::endl;
 		}
-		std::cout << "--------------- ---- ---------------" << std::endl;
+		std::cout << "--------------- ----- ---------------" << std::endl << std::endl;
 	}
 
 }

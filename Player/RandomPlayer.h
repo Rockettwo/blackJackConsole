@@ -15,7 +15,7 @@ namespace bj {
 	public:
 		RandomPlayer(strategy st, std::string name, std::shared_ptr<GameOptions> go, int money, std::shared_ptr<CardStacks> cardStacks) {
 			Player::init(st, name, go, money, cardStacks);
-			srand(time(NULL));
+			srand(unsigned int(time(NULL)));
 		}
 
 		action move(int stack) override { return (rand() % 2) < 1 ? HIT : STAND ; };
