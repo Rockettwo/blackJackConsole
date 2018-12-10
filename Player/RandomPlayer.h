@@ -13,12 +13,12 @@ namespace bj {
 	class RandomPlayer : public Player
 	{
 	public:
-		RandomPlayer(strategy st, std::string name, int money, std::shared_ptr<CardStacks> cardStacks) {
-			Player::init(st, name, money, cardStacks);
+		RandomPlayer(strategy st, std::string name, std::shared_ptr<GameOptions> go, int money, std::shared_ptr<CardStacks> cardStacks) {
+			Player::init(st, name, go, money, cardStacks);
 			srand(time(NULL));
 		}
 
-		action move() override { return (rand() % 2) < 1 ? HIT : STAND ; };
+		action move(int stack) override { return (rand() % 2) < 1 ? HIT : STAND ; };
 
 	private:
 

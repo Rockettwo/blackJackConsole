@@ -2,7 +2,7 @@
 
 namespace bj {
 
-	action Dealer::move()
+	action Dealer::move(int stack)
 	{
 		return HIT;
 	}

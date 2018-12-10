@@ -21,7 +21,7 @@ namespace bj {
 	enum cardRank { ACE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING };
 	static std::string cardRank_s[] = { "ACE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE", "TEN", "JACK", "QUEEN", "KING" };
 
-	enum action { HIT, STAND, DOUBLE, SPLIT };
+	enum action { HIT, STAND, DOUBLE, SPLIT, INVALID };
 	static std::string action_s[] = { "HIT", "STAND", "DOUBLE", "SPLIT" };
 
 	/// <summary>

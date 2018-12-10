@@ -5,17 +5,20 @@
 
 #include "Player.h"
 #include "../GameEngine/GameOptions.h"
+#include <string>
 
 namespace bj {
 
 	class Human : public Player
 	{
 	public:
-		Human(strategy st, std::string name, int money, std::shared_ptr<CardStacks> cardStacks) { Player::init(st, name, money, cardStacks); }
+		Human(strategy st, std::string name, std::shared_ptr<GameOptions> go, int money, std::shared_ptr<CardStacks> cardStacks) { Player::init(st, name, go, money, cardStacks); }
 
-		action move() override;
+		action move(int stack) override;
 
 	private:
+
+		action charToAction(char c);
 
 	};
 

@@ -11,9 +11,9 @@ namespace bj {
 	class Dealer : public Player
 	{
 	public:
-		Dealer() { Player::init(DEALER, "Dealer", 0, 0); }
+		Dealer(std::shared_ptr<GameOptions> go) { Player::init(DEALER, "Dealer", go, 0, 0); }
 
-		action move() override;
+		action move(int stack) override;
 
 	private:
 
