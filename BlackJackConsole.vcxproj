@@ -85,7 +85,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
@@ -112,11 +112,13 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ForceFileOutput>
+      </ForceFileOutput>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -135,7 +137,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -153,22 +155,26 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="GameEngine\Card.h" />
-    <ClInclude Include="helperFunctions.h" />
-    <ClInclude Include="Player\Dealer.h" />
-    <ClInclude Include="GameEngine\Game.h" />
-    <ClInclude Include="GameEngine\GameOptions.h" />
-    <ClInclude Include="Player\Human.h" />
-    <ClInclude Include="Player\Player.h" />
-    <ClInclude Include="Player\RandomPlayer.h" />
+    <ClInclude Include="BlackJackConsole\GameEngine\Card.h" />
+    <ClInclude Include="BlackJackConsole\Player\Dealer.h" />
+    <ClInclude Include="BlackJackConsole\GameEngine\Game.h" />
+    <ClInclude Include="BlackJackConsole\GameEngine\GameOptions.h" />
+    <ClInclude Include="BlackJackConsole\Player\Human.h" />
+    <ClInclude Include="BlackJackConsole\Player\Player.h" />
+    <ClInclude Include="BlackJackConsole\Player\RandomPlayer.h" />
+    <ClInclude Include="BlackJackConsole\libs\date.h" />
+    <ClInclude Include="BlackJackConsole\libs\helperFunctions.h" />
+    <ClInclude Include="BlackJackConsole\libs\log.hpp" />
+    <ClInclude Include="BlackJackConsole\libs\logger.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="bjcon.cpp" />
-    <ClCompile Include="Player\Dealer.cpp" />
-    <ClCompile Include="GameEngine\Game.cpp" />
-    <ClCompile Include="GameEngine\GameOptions.cpp" />
-    <ClCompile Include="Player\Human.cpp" />
-    <ClCompile Include="Player\Player.cpp" />
+    <ClCompile Include="BlackJackConsole\bjcon.cpp" />
+    <ClCompile Include="BlackJackConsole\Player\Dealer.cpp" />
+    <ClCompile Include="BlackJackConsole\GameEngine\Game.cpp" />
+    <ClCompile Include="BlackJackConsole\GameEngine\GameOptions.cpp" />
+    <ClCompile Include="BlackJackConsole\Player\Human.cpp" />
+    <ClCompile Include="BlackJackConsole\Player\Player.cpp" />
+    <ClCompile Include="BlackJackConsole\libs\logger.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

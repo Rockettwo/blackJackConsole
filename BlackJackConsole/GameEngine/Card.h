@@ -7,6 +7,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include "../libs/logger.hpp"
 
 namespace bj {
 
@@ -37,7 +38,7 @@ namespace bj {
 		std::string getColorString() const { return cardColor_s[size_t(_cC)]; }
 		std::string getRankString() const { return cardRank_s[size_t(_cR)]; }
 
-		void printCard() { std::cout << getColorString() << "-" << getRankString(); }
+		void printCard() { PRINT(getColorString(), "-", getRankString()); }
 
 		void setAceVal11() { _value = _ace ? 11 : _value; }
 
@@ -57,6 +58,21 @@ namespace bj {
 		std::vector<std::shared_ptr<Card>> cardsInShoe;
 		std::vector<std::shared_ptr<Card>> cardsOnTable;
 		std::vector<std::shared_ptr<Card>> cardsPlayed;
+
+		void moveTablePlayed() 
+		{
+			for (auto c : cardsOnTable) {
+				cardsPlayed.push_back(c);
+			}
+			cardsOnTable.clear();
+		}
+		void movePlayedShoe()
+		{
+			for (auto c : cardsPlayed) {
+				cardsInShoe.push_back(c);
+			}
+			cardsPlayed.clear();
+		}
 	};
 
 }

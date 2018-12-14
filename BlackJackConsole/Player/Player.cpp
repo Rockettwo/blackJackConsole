@@ -10,7 +10,7 @@ namespace bj {
 			blackJack[stack] = true;
 
 		if (isBusted(stack)) {
-			std::cout << "Busted." << std::endl;
+			PRINT("Busted.\n");
 			return true;
 		} else {
 			return false;
@@ -19,7 +19,7 @@ namespace bj {
 
 	bool Player::addCard2(std::shared_ptr<Card> c, int stack)
 	{
-		c->printCard(); std::cout << std::endl;
+		c->printCard(); PRINT("\n");
 		return addCard(c, stack);
 	}
 
@@ -40,9 +40,9 @@ namespace bj {
 		for (auto& cards : _cards) {
 			for (int i = 0; i < cards.size(); ++i) {
 				cards[i]->printCard();
-				std::cout << (i + int(1) != cards.size() ? " | " : "");
+				PRINT(i + int(1) != cards.size() ? " | " : "");
 				if (i + int(1) == cards.size())
-					std::cout << " --- card count: " << cardSum(j) << std::endl;
+					PRINT(" --- card count: ", cardSum(j), "\n");
 			}
 			++j;
 		}
@@ -108,7 +108,7 @@ namespace bj {
 					for (auto card : _cards[i]) {
 						if (card->getRank() == ACE) {
 							card->setAceVal11();
-							std::cout << "Set val of ace to 11" << std::endl;
+							PRINT("Set val of ace to 11\n");
 							break;
 						}
 					}
@@ -147,7 +147,7 @@ namespace bj {
 	}
 
 	void Player::printActions(int stack) {
-		std::cout << "(H)IT | (S)TAND" << (doubleAllowed(stack) ? " | (D)OUBLE" : "") << (splitAllowed(stack) ? " | S(P)LIT" : "") << "  - stack: " << stack << std::endl;
+		PRINT("(H)IT | (S)TAND", (doubleAllowed(stack) ? " | (D)OUBLE" : ""), (splitAllowed(stack) ? " | S(P)LIT" : ""), "  - stack: ", stack, "\n");
 	}
 
 	void Player::generateAllowedVec(int stack) {

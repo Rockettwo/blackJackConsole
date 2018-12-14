@@ -6,7 +6,12 @@
 #include <iostream>
 
 void clrscr() {
-	std::cout << "\033[2J\033[1;1H";
+	PRINT("\033[2J\033[1;1H");
+}
+
+void waitForInput() {
+	char c = getchar();
+	std::system("pause");
 }
 
 #endif

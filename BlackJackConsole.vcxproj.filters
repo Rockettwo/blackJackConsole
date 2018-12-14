@@ -9,61 +9,78 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
-    <Filter Include="Ressourcendateien">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
     <Filter Include="Headerdateien\Player">
       <UniqueIdentifier>{f53d6545-df01-414e-9df6-c042bd96ee96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\libs">
+      <UniqueIdentifier>{a868332e-587b-41b3-bc84-218df236b123}</UniqueIdentifier>
     </Filter>
     <Filter Include="Quelldateien\Player">
       <UniqueIdentifier>{a868332e-587b-41b3-bc84-218df236b525}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Headerdateien\Game">
+      <UniqueIdentifier>{03ee29e5-e6ea-4e63-9e4e-eda2f34b2476}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Game">
+      <UniqueIdentifier>{14ac1420-86a6-4a71-9c93-f393b5e602f6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="bjcon.cpp">
+    <ClCompile Include="BlackJackConsole\bjcon.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="GameEngine\Game.cpp">
+    <ClCompile Include="BlackJackConsole\Player\Dealer.cpp">
+      <Filter>Quelldateien\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="BlackJackConsole\Player\Player.cpp">
+      <Filter>Quelldateien\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="BlackJackConsole\Player\Human.cpp">
+      <Filter>Quelldateien\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="BlackJackConsole\GameEngine\Game.cpp">
+      <Filter>Quelldateien\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="BlackJackConsole\GameEngine\GameOptions.cpp">
+      <Filter>Quelldateien\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="BlackJackConsole\libs\logger.cpp">
       <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="GameEngine\GameOptions.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Player\Dealer.cpp">
-      <Filter>Quelldateien\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="Player\Player.cpp">
-      <Filter>Quelldateien\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="Player\Human.cpp">
-      <Filter>Quelldateien\Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GameEngine\Game.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="GameEngine\GameOptions.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="GameEngine\Card.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Player\Player.h">
+    <ClInclude Include="BlackJackConsole\Player\Player.h">
       <Filter>Headerdateien\Player</Filter>
     </ClInclude>
-    <ClInclude Include="Player\Dealer.h">
+    <ClInclude Include="BlackJackConsole\Player\Dealer.h">
       <Filter>Headerdateien\Player</Filter>
     </ClInclude>
-    <ClInclude Include="Player\RandomPlayer.h">
+    <ClInclude Include="BlackJackConsole\Player\RandomPlayer.h">
       <Filter>Headerdateien\Player</Filter>
     </ClInclude>
-    <ClInclude Include="Player\Human.h">
+    <ClInclude Include="BlackJackConsole\Player\Human.h">
       <Filter>Headerdateien\Player</Filter>
     </ClInclude>
-    <ClInclude Include="helperFunctions.h">
-      <Filter>Headerdateien</Filter>
+    <ClInclude Include="BlackJackConsole\libs\date.h">
+      <Filter>Headerdateien\libs</Filter>
+    </ClInclude>
+    <ClInclude Include="BlackJackConsole\libs\helperFunctions.h">
+      <Filter>Headerdateien\libs</Filter>
+    </ClInclude>
+    <ClInclude Include="BlackJackConsole\libs\log.hpp">
+      <Filter>Headerdateien\libs</Filter>
+    </ClInclude>
+    <ClInclude Include="BlackJackConsole\GameEngine\Card.h">
+      <Filter>Headerdateien\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="BlackJackConsole\GameEngine\Game.h">
+      <Filter>Headerdateien\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="BlackJackConsole\GameEngine\GameOptions.h">
+      <Filter>Headerdateien\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="BlackJackConsole\libs\logger.hpp">
+      <Filter>Headerdateien\libs</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
