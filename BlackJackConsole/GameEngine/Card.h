@@ -39,8 +39,10 @@ namespace bj {
 		std::string getRankString() const { return cardRank_s[size_t(_cR)]; }
 
 		void printCard() { PRINT(getColorString(), "-", getRankString()); }
+		std::string cardString() {	return getColorString() + "-" + getRankString();	}
 
 		void setAceVal11() { _value = _ace ? 11 : _value; }
+		void resetAceVal() { _value = _ace ? 1 : _value; }
 
 	private:
 		cardColor _cC;
@@ -63,6 +65,7 @@ namespace bj {
 		{
 			for (auto c : cardsOnTable) {
 				cardsPlayed.push_back(c);
+				c->resetAceVal();
 			}
 			cardsOnTable.clear();
 		}

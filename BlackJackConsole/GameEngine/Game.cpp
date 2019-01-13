@@ -110,6 +110,7 @@ namespace bj {
 
 	void Game::play()
 	{
+		long gameCounter = 0;
 		while (playerVec.size() > 1) {
 			shuffleIfNeeded();
 
@@ -118,9 +119,14 @@ namespace bj {
 				playerVec[i]->prepare();
 				if (unsigned int(playerVec[i]->getMoney()) < _go.betUnit()) deletePlayer(i);
 			}
+			LOG1("0 ", "1 ", "NEW ", gameCounter);
 			playSingle();
+
+#if CMD__DEBUG
 			waitForInput();
 			clrscr();
+#endif
+			++gameCounter;
 		}
 		PRINT("Error: no player\n");
 	}
@@ -137,10 +143,11 @@ namespace bj {
 				playerVec[i]->addCard(popCard(), 0);
 				//printGame();
 			}
+			LOG1(i, " ", "0 ", "DEAL ", playerVec[i]->cardsString());
 		}
 		// dealer card
 		dealer->addCard(popCard(), 0);
-
+		LOG1("0 ", "0 ", "DEAL ", dealer->cardsString());
 		printGame();
 
 		// go through player
@@ -149,19 +156,28 @@ namespace bj {
 			bool split = false;			// Has the player splitted his cards?
 			int stack = 0;				// Which stack are we using now?
 			PRINT(player->name(), " it's your turn. You have ", player->getMoney(), " money left.\n");
-			player->getBet(_go.betUnit());			// First get money
+			player->setBet(_go.betUnit());			
+			dealer->exchangeMoney(player->exchangeMoney(-1));			// First get money
 			while (!player->isFinished()) {
 
 				PRINT("\n");
 				player->printCards();
 
-				switch (player->move(stack)) {
+				action move = player->isBlackJack(stack) ? STAND : player->move(stack);
+
+				if (!player->isAllowedAction(move, stack)) {
+					PRINT("Is not an allowed action.");
+					continue;
+				}
+				
+				switch (move) {
 				case HIT:
 					PRINT("HIT ");
 					//player->hit(stack);
 					if (player->addCard2(popCard(), stack) && split && stack == 0) {
 						stack = 1;
 					}
+					LOG1(i, " ", "0 ", "HIT ", playerVec[i]->cardsString());
 					break;
 				case STAND:
 					PRINT("STAND \n");
@@ -169,6 +185,7 @@ namespace bj {
 					if (split && stack == 0) {
 						stack = 1;
 					}
+					LOG1(i, " ", "0 ", "STAND ", playerVec[i]->cardsString());
 					break;
 				case SPLIT:
 					PRINT("SPLIT \n");
@@ -176,6 +193,7 @@ namespace bj {
 					player->addCard2(popCard(), 0);
 					player->addCard2(popCard(), 1);
 					split = true;
+					LOG1(i, " ", "0 ", "SPLIT ", playerVec[i]->cardsString());
 					break;
 				case DOUBLE:
 					PRINT("DOUBLEDOWN ");
@@ -183,6 +201,7 @@ namespace bj {
 					if (player->addCard2(popCard(), stack) && split && stack == 0) {
 						stack = 1;
 					}
+					LOG1(i, " ", "0 ", "DOUBLEDOWN ", playerVec[i]->cardsString());
 					break;
 				default:
 					PRINT("NIX \n");
@@ -199,9 +218,11 @@ namespace bj {
 			case HIT:
 				//player->hit(stack);
 				dealer->addCard(popCard(), 0);
+				LOG1("0 ", "0 ", "HIT ", dealer->cardsString());
 				break;
 			case STAND:
 				dealer->stand(0);
+				LOG1("0 ", "0 ", "STAND ", dealer->cardsString());
 				break;
 			default:
 				break;
@@ -217,39 +238,51 @@ namespace bj {
 	{
 		static std::shared_ptr<Player> dealer = playerVec[0];
 
+		std::string cardResult = "";
 		for (int i = 1; i < playerVec.size(); ++i) {
 			std::shared_ptr<Player> player = playerVec[i];
 			for (int j = 0; j < (player->isSplit() ? 2 : 1); ++j) {
 				double ratio = 0.0;
+				int cardSum = player->cardSum(j);
 				if (player->isBusted(j)) {
 					PRINT(player->name(), " - stack ", j, " - You got busted.\n");
+					cardResult = std::to_string(cardSum);
 					ratio = 0.0;
 				} else if (player->isBlackJack(j) && !dealer->isBlackJack(0)) {
 					PRINT(player->name(), " - stack ", j, " - You have a blackjack.\n");
+					cardResult = "BJ";
 					ratio = 1.0 + _go.bjPayRate();
 				} else if (player->isBlackJack(j) && dealer->isBlackJack(0)) {
 					PRINT(player->name(), " - stack ", j, " - Blackjack for both.\n");
+					cardResult = "BJBJ";
 					ratio = 1.0;
 				} else if (dealer->isBlackJack(0)) {
 					PRINT(player->name(), " - stack ", j, " - Blackjack for dealer.\n");
+					cardResult = "DBJ";
 					ratio = 0.0;
 				} else if (dealer->isBusted(0)) {
 					PRINT(player->name(), " - stack ", j, " - Dealer busted.\n");
+					cardResult = std::to_string(cardSum);
 					ratio = 2.0;
-				} else if (dealer->cardSum(0) > player->cardSum(j)) {
-					PRINT(player->name(), " - stack ", j, " - Dealer has ", dealer->cardSum(j), " you have ", player->cardSum(j), ".\n");
+				} else if (dealer->cardSum(0) > cardSum) {
+					PRINT(player->name(), " - stack ", j, " - Dealer has ", dealer->cardSum(j), " you have ", cardSum, ".\n");
+					cardResult = std::to_string(cardSum);
 					ratio = 0.0;
-				} else if (dealer->cardSum(0) < player->cardSum(j)) {
-					PRINT(player->name(), " - stack ", j, " - Dealer has ", dealer->cardSum(j), " you have ", player->cardSum(j), ".\n");
+				} else if (dealer->cardSum(0) < cardSum) {
+					PRINT(player->name(), " - stack ", j, " - Dealer has ", dealer->cardSum(j), " you have ", cardSum, ".\n");
+					cardResult = std::to_string(cardSum);
 					ratio = 2.0;
 				} else {
 					PRINT(player->name(), " - stack ", j, " - Equal split.\n");
+					cardResult = std::to_string(cardSum);
 					ratio = 1.0;
 				}
-				dealer->exchangeMoney(player->exchangeMoney(ratio));
+				int exchangedMoney = dealer->exchangeMoney(player->exchangeMoney(ratio)) - 10;
+				LOG2(i, " ", cardResult, " ", exchangedMoney, " ", player->getMoney());
 			}
 			PRINT(player->name(), " you have ", player->getMoney(), " money left.\n\n");
 		}
+		LOG2("0 ", dealer->cardSum(0), " X ", dealer->getMoney());
 	}
 
 	void Game::printGame()

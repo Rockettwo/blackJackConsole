@@ -20,6 +20,8 @@
 #ifndef LOG_HPP
 #define LOG_HPP
 
+#define CMD__DEBUG 0
+
 namespace logging {
 
 	/*
@@ -84,7 +86,9 @@ namespace logging {
 		}
 		void write(const std::string& msg)
 		{
+#if CMD__DEBUG
 			*out_stream << msg << std::flush;
+#endif
 		}
 
 		~cmdline_log_policy() {}
@@ -208,14 +212,20 @@ namespace logging {
 		switch (severity) {
 		case severity_type::print:
 			break;
-		case severity_type::debug1:
+		case severity_type::debug1:			
+			log_stream << "DBG1: ";
+			break;
 		case severity_type::debug2:
+			log_stream << "DBG2: ";
+			break;
 		case severity_type::debug3:
-			log_stream << "DBG: ";
+			log_stream << "DBG3: ";
 			break;
 		case severity_type::warning1:
+			log_stream << "WRN1: ";
+			break;
 		case severity_type::warning2:
-			log_stream << "WRN: ";
+			log_stream << "WRN2: ";
 			break;
 		case severity_type::error:
 			log_stream << "ERR: ";
@@ -249,7 +259,20 @@ namespace logging {
 		log_line_number{ 0 },
 		logging_level{ min_log_severity }
 	{
-		policy.open_out_stream(name);
+		char * filename = new char[name.size() + 1 + 24];
+		std::copy(name.begin(), name.end(), filename);
+		filename[name.size()] = '\0'; // don't forget the terminating 0
+
+		time_t rawtime = time(NULL);
+		struct tm timeinfo;
+		char buffer[80];
+		localtime_s(&timeinfo, &rawtime);
+
+		strftime(buffer, 80, "_%Y-%m-%d_%H-%M-%S", &timeinfo);
+		strcat_s(filename, name.size()+25, buffer); 
+		strcat_s(filename, name.size()+25, ".log");
+
+		policy.open_out_stream(filename);
 		reference_epoch = std::chrono::high_resolution_clock::now();
 		//Set the running flag ans spawn the daemon
 		is_still_running.test_and_set();

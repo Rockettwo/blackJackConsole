@@ -17,7 +17,7 @@ namespace bj {
 
 	int Dealer::exchangeMoney(double ratio)
 	{
-		_money += int(ratio);
+		_money -= int(ratio);
 		return int(ratio);
 	}
 

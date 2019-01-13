@@ -41,11 +41,33 @@ namespace bj {
 			for (int i = 0; i < cards.size(); ++i) {
 				cards[i]->printCard();
 				PRINT(i + int(1) != cards.size() ? " | " : "");
-				if (i + int(1) == cards.size())
-					PRINT(" --- card count: ", cardSum(j), "\n");
+				if (i + int(1) == cards.size()) {
+					if (isBlackJack(j))
+						PRINT(" --- Black Jack!!!\n");
+					else {
+						PRINT(" --- card count: ", cardSum(j));
+						printCardSumAces(j);
+						PRINT("\n");
+
+					}
+				}
 			}
 			++j;
 		}
+	}
+
+	std::string Player::cardsString()
+	{
+		std::string cardsString = "";		
+		int j = 0;
+		for (auto& cards : _cards) {
+			for (int i = 0; i < cards.size(); ++i) {
+				cardsString += cards[i]->cardString() + " ";
+			}
+			cardsString += (j == 0 ? "|" : "");
+			++j;
+		}
+		return cardsString;
 	}
 
 	void Player::hit(int stack)
@@ -73,7 +95,7 @@ namespace bj {
 		finished[stack] = true;
 	}
 
-	int Player::cardSum(int stack) {
+	int Player::cardSum(int stack) const {
 		int sum = 0;
 		for (auto card : _cards[stack]) {
 			sum += card->getValue();
@@ -81,9 +103,14 @@ namespace bj {
 		return sum;
 	}
 
-	void Player::getBet(unsigned int minBet) {
+	void Player::printCardSumAces(int stack) const {
+		if (containsAce(stack) && cardSum(stack) + 10 < 22) {
+			PRINT(" ", cardSum(stack) + 10, " ");
+		}
+	}
+
+	void Player::setBet(unsigned int minBet) {
 		_actBet = minBet;
-		_money -= _actBet;
 	}
 
 	int Player::exchangeMoney(double ratio)
@@ -122,7 +149,7 @@ namespace bj {
 		}
 	}
 
-	bool Player::containsAce(int stack) {
+	bool Player::containsAce(int stack) const {
 		for (auto card : _cards[stack]) {
 			if (card->getRank() == ACE) 
 				return true;
@@ -158,4 +185,12 @@ namespace bj {
 		if (doubleAllowed(stack)) allowedActions.push_back(DOUBLE);
 	}
 
+	bool Player::isAllowedAction(action a, int stack) {
+		generateAllowedVec(stack);
+		for (action test : allowedActions) {
+			if (a == test)
+				return true;
+		}
+		return false;
+	}
 }

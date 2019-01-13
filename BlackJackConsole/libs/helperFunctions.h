@@ -4,7 +4,7 @@
 #define HELPERFUNCTIONS_H
 
 #include <iostream>
-
+#include "log.hpp"
 void clrscr() {
 	PRINT("\033[2J\033[1;1H");
 }
