@@ -115,11 +115,21 @@ namespace bj {
 			shuffleIfNeeded();
 
 			playerVec[0]->prepare();
+			int* idxToDel = new int[playerVec.size()];
 			for (int i = 1; i < playerVec.size(); ++i) {
 				playerVec[i]->prepare();
-				if (unsigned int(playerVec[i]->getMoney()) < _go.betUnit()) deletePlayer(i);
+				if (unsigned int(playerVec[i]->getMoney()) < _go.betUnit()) 
+					idxToDel[i] = 1;
+				else 
+					idxToDel[i] = 0;
 			}
-			LOG1("0 ", "1 ", "NEW ", gameCounter);
+			for (int i = 1, j = 1; i < playerVec.size(); ++i, ++j) {
+				if (idxToDel[j] == 1) {
+					deletePlayer(i);
+					--i;
+				}
+			}
+			LOG1("Dealer ", "1 ", "NEW ", gameCounter);
 			playSingle();
 
 #if CMD__DEBUG
@@ -143,11 +153,11 @@ namespace bj {
 				playerVec[i]->addCard(popCard(), 0);
 				//printGame();
 			}
-			LOG1(i, " ", "0 ", "DEAL ", playerVec[i]->cardsString());
+			LOG1(playerVec[i]->name(), " ", "0 ", "DEAL ", playerVec[i]->cardsString());
 		}
 		// dealer card
 		dealer->addCard(popCard(), 0);
-		LOG1("0 ", "0 ", "DEAL ", dealer->cardsString());
+		LOG1("Dealer ", "0 ", "DEAL ", dealer->cardsString());
 		printGame();
 
 		// go through player
@@ -177,7 +187,7 @@ namespace bj {
 					if (player->addCard2(popCard(), stack) && split && stack == 0) {
 						stack = 1;
 					}
-					LOG1(i, " ", "0 ", "HIT ", playerVec[i]->cardsString());
+					LOG1(player->name(), " ", "0 ", "HIT ", playerVec[i]->cardsString());
 					break;
 				case STAND:
 					PRINT("STAND \n");
@@ -185,7 +195,7 @@ namespace bj {
 					if (split && stack == 0) {
 						stack = 1;
 					}
-					LOG1(i, " ", "0 ", "STAND ", playerVec[i]->cardsString());
+					LOG1(player->name(), " ", "0 ", "STAND ", playerVec[i]->cardsString());
 					break;
 				case SPLIT:
 					PRINT("SPLIT \n");
@@ -193,7 +203,7 @@ namespace bj {
 					player->addCard2(popCard(), 0);
 					player->addCard2(popCard(), 1);
 					split = true;
-					LOG1(i, " ", "0 ", "SPLIT ", playerVec[i]->cardsString());
+					LOG1(player->name(), " ", "0 ", "SPLIT ", playerVec[i]->cardsString());
 					break;
 				case DOUBLE:
 					PRINT("DOUBLEDOWN ");
@@ -201,7 +211,7 @@ namespace bj {
 					if (player->addCard2(popCard(), stack) && split && stack == 0) {
 						stack = 1;
 					}
-					LOG1(i, " ", "0 ", "DOUBLEDOWN ", playerVec[i]->cardsString());
+					LOG1(player->name(), " ", "0 ", "DOUBLEDOWN ", playerVec[i]->cardsString());
 					break;
 				default:
 					PRINT("NIX \n");
@@ -218,11 +228,11 @@ namespace bj {
 			case HIT:
 				//player->hit(stack);
 				dealer->addCard(popCard(), 0);
-				LOG1("0 ", "0 ", "HIT ", dealer->cardsString());
+				LOG1("Dealer ", "0 ", "HIT ", dealer->cardsString());
 				break;
 			case STAND:
 				dealer->stand(0);
-				LOG1("0 ", "0 ", "STAND ", dealer->cardsString());
+				LOG1("Dealer ", "0 ", "STAND ", dealer->cardsString());
 				break;
 			default:
 				break;
@@ -278,11 +288,11 @@ namespace bj {
 					ratio = 1.0;
 				}
 				int exchangedMoney = dealer->exchangeMoney(player->exchangeMoney(ratio)) - 10;
-				LOG2(i, " ", cardResult, " ", exchangedMoney, " ", player->getMoney());
+				LOG2(player->name(), " ", cardResult, " ", exchangedMoney, " ", player->getMoney());
 			}
 			PRINT(player->name(), " you have ", player->getMoney(), " money left.\n\n");
 		}
-		LOG2("0 ", dealer->cardSum(0), " X ", dealer->getMoney());
+		LOG2("Dealer ", dealer->cardSum(0), " X ", dealer->getMoney());
 	}
 
 	void Game::printGame()
